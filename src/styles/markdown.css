@@ -20,7 +20,7 @@
     }
 
     a:not(.no-styling) {
-        @apply relative bg-none link font-medium text-[var(--primary)]
+        @apply relative bg-none font-medium text-[var(--primary)]
         underline decoration-[var(--link-underline)] decoration-1 decoration-dashed underline-offset-4;
         box-decoration-break: clone;
         -webkit-box-decoration-break: clone;
@@ -92,8 +92,72 @@
 
 
     ul, ol {
-        li::marker {
-            @apply text-[var(--primary)];
+        @apply my-4 px-4 py-3 rounded-lg bg-[var(--list-bg)] border border-[var(--list-border)] transition;
+        list-style: none; /* デフォルトのマーカーを非表示 */
+        
+        li {
+            @apply my-1.5 pl-6 relative; /* 左側にスペースを確保 */
+            
+            /* カスタムマーカーアイコン */
+            &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0.5em;
+                width: 0.5em;
+                height: 0.5em;
+                background-color: var(--primary);
+                border-radius: 50%;
+                transition: all 0.2s ease;
+            }
+        }
+        
+        /* 順序付きリストのカウンターリセット */
+        ol {
+            counter-reset: list-counter;
+            
+            li {
+                counter-increment: list-counter;
+                
+                &::before {
+                    content: counter(list-counter) '.';
+                    background-color: transparent;
+                    color: var(--primary);
+                    font-weight: 600;
+                    width: auto;
+                    height: auto;
+                    border-radius: 0;
+                    left: -0.25em;
+                }
+            }
+        }
+        
+        /* ネストされたリストのスタイル調整 */
+        ul, ol {
+            @apply my-2 mt-2 mb-2 bg-transparent border-0 p-0;
+            
+            li {
+                @apply my-1;
+                
+                /* ネストされたリストのアイコンサイズを小さく */
+                &::before {
+                    width: 0.4em;
+                    height: 0.4em;
+                    top: 0.6em;
+                }
+            }
+            
+            /* ネストされた順序付きリストもカウンターリセット */
+            ol {
+                counter-reset: list-counter;
+                
+                li {
+                    &::before {
+                        content: counter(list-counter) '.';
+                        font-size: 0.9em;
+                    }
+                }
+            }
         }
     }
 

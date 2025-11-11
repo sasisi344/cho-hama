@@ -1,9 +1,10 @@
 ---
 import { Icon } from "astro-icon/components";
-import { navBarConfig, siteConfig } from "../config";
+import { siteConfig } from "../config";
 import { LinkPresets } from "../constants/link-presets";
 import { LinkPreset, type NavBarLink } from "../types/config";
 import { url } from "../utils/url-utils";
+import { generateCategoryMenu } from "../utils/menu-utils";
 import LightDarkSwitch from "./LightDarkSwitch.svelte";
 import Search from "./Search.svelte";
 import DisplaySettings from "./widget/DisplaySettings.svelte";
@@ -11,7 +12,14 @@ import NavMenuPanel from "./widget/NavMenuPanel.astro";
 
 const className = Astro.props.class;
 
-let links: NavBarLink[] = navBarConfig.links.map(
+// カテゴリメニューを生成
+const categoryMenuItems = await generateCategoryMenu();
+
+// 基本リンクとカテゴリメニューを結合
+let links: NavBarLink[] = [
+	LinkPreset.Home,
+	...categoryMenuItems,
+].map(
 	(item: NavBarLink | LinkPreset): NavBarLink => {
 		if (typeof item === "number") {
 			return LinkPresets[item];
@@ -31,10 +39,36 @@ let links: NavBarLink[] = navBarConfig.links.map(
                 {siteConfig.title}
             </div>
         </a>
-        <div class="hidden md:flex">
-            {links.map((l) => {
+        <div class="hidden md:flex relative">
+            {links.map((l, index) => {
+                if (l.children && l.children.length > 0) {
+                    return (
+                        <div class="dropdown-menu relative" data-dropdown-index={index}>
+                            <button 
+                                type="button"
+                                aria-label={l.name}
+                                aria-expanded="false"
+                                class="btn-plain scale-animation rounded-lg h-11 font-bold px-5 active:scale-95 flex items-center dark:hover:!text-white/75 dropdown-toggle"
+                            >
+                                {l.name}
+                                <Icon name="material-symbols:keyboard-arrow-down-rounded" class="text-lg ml-1 transition-transform dropdown-chevron text-black/75 dark:text-white/75"></Icon>
+                            </button>
+                            <div class="dropdown-content absolute top-full left-0 mt-1 opacity-0 invisible transition-all duration-200 z-50 min-w-[200px]">
+                                <div class="card-base rounded-lg p-2 shadow-lg">
+                                    {l.children.map((child) => (
+                                        <a href={child.external ? child.url : url(child.url)} 
+                                           target={child.external ? "_blank" : null}
+                                           class="block px-4 py-2 rounded-lg hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)] transition text-sm font-medium text-black/75 dark:text-white/75">
+                                            {child.name}
+                                        </a>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    );
+                }
                 return <a aria-label={l.name} href={l.external ? l.url : url(l.url)} target={l.external ? "_blank" : null}
-                          class="btn-plain scale-animation rounded-lg h-11 font-bold px-5 active:scale-95"
+                          class="btn-plain scale-animation rounded-lg h-11 font-bold px-5 active:scale-95 dark:hover:!text-white/75"
                 >
                     <div class="flex items-center">
                         {l.name}
@@ -99,6 +133,74 @@ function loadButtonScript() {
             }
         };
     }
+
+    // ドロップダウンメニューのクリック処理
+    function initDropdownMenus() {
+        const dropdownMenus = document.querySelectorAll('.dropdown-menu');
+        
+        dropdownMenus.forEach((menu) => {
+            const toggle = menu.querySelector('.dropdown-toggle') as HTMLButtonElement;
+            const content = menu.querySelector('.dropdown-content') as HTMLElement;
+            const chevron = menu.querySelector('.dropdown-chevron') as HTMLElement;
+            
+            if (!toggle || !content || !chevron) return;
+            
+            toggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const isOpen = !content.classList.contains('invisible');
+                
+                // すべてのドロップダウンを閉じる
+                dropdownMenus.forEach((otherMenu) => {
+                    const otherContent = otherMenu.querySelector('.dropdown-content') as HTMLElement;
+                    const otherChevron = otherMenu.querySelector('.dropdown-chevron') as HTMLElement;
+                    const otherToggle = otherMenu.querySelector('.dropdown-toggle') as HTMLButtonElement;
+                    
+                    if (otherContent && otherChevron && otherToggle) {
+                        otherContent.classList.add('invisible', 'opacity-0');
+                        otherContent.classList.remove('opacity-100', 'visible');
+                        otherChevron.classList.remove('rotate-180');
+                        otherToggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
+                
+                // クリックされたメニューを開閉
+                if (isOpen) {
+                    content.classList.add('invisible', 'opacity-0');
+                    content.classList.remove('opacity-100', 'visible');
+                    chevron.classList.remove('rotate-180');
+                    toggle.setAttribute('aria-expanded', 'false');
+                } else {
+                    content.classList.remove('invisible', 'opacity-0');
+                    content.classList.add('opacity-100', 'visible');
+                    chevron.classList.add('rotate-180');
+                    toggle.setAttribute('aria-expanded', 'true');
+                }
+            });
+        });
+        
+        // 外側をクリックしたら閉じる
+        document.addEventListener('click', (e) => {
+            const target = e.target as HTMLElement;
+            if (!target.closest('.dropdown-menu')) {
+                dropdownMenus.forEach((menu) => {
+                    const content = menu.querySelector('.dropdown-content') as HTMLElement;
+                    const chevron = menu.querySelector('.dropdown-chevron') as HTMLElement;
+                    const toggle = menu.querySelector('.dropdown-toggle') as HTMLButtonElement;
+                    
+                    if (content && chevron && toggle) {
+                        content.classList.add('invisible', 'opacity-0');
+                        content.classList.remove('opacity-100', 'visible');
+                        chevron.classList.remove('rotate-180');
+                        toggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+        });
+    }
+    
+    initDropdownMenus();
 }
 
 loadButtonScript();
@@ -139,3 +241,18 @@ if (document.readyState === 'loading') {
     loadPagefind();
 }
 </script>}
+
+<style>
+/* ダークモード時のメニューホバー文字色を固定 */
+.dark #navbar .btn-plain:hover,
+.dark #navbar .btn-plain.scale-animation:hover {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+
+/* ダークモード時のアイコンのfill色を固定 */
+.dark #navbar .btn-plain:hover .dropdown-chevron,
+.dark #navbar .btn-plain.scale-animation:hover .dropdown-chevron {
+    fill: rgba(255, 255, 255, 0.75) !important;
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+</style>

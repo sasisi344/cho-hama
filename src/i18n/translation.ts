@@ -5,6 +5,7 @@ import { es } from "./languages/es";
 import { id } from "./languages/id";
 import { ja } from "./languages/ja";
 import { ko } from "./languages/ko";
+import { pt } from "./languages/pt";
 import { th } from "./languages/th";
 import { tr } from "./languages/tr";
 import { vi } from "./languages/vi";
@@ -29,6 +30,9 @@ const map: { [key: string]: Translation } = {
 	ja_jp: ja,
 	ko: ko,
 	ko_kr: ko,
+	pt: pt,
+	pt_br: pt,
+	pt_pt: pt,
 	th: th,
 	th_th: th,
 	vi: vi,
@@ -42,7 +46,18 @@ export function getTranslation(lang: string): Translation {
 	return map[lang.toLowerCase()] || defaultTranslation;
 }
 
-export function i18n(key: I18nKey): string {
-	const lang = siteConfig.lang || "en";
-	return getTranslation(lang)[key];
+// Cookieから言語を取得する関数（クライアントサイド用）
+export function getLangFromCookie(): string {
+	if (typeof document === 'undefined') return 'ja';
+	const langCookie = document.cookie
+		.split('; ')
+		.find(row => row.startsWith('lang='))
+		?.split('=')[1];
+	return langCookie || 'ja';
+}
+
+export function i18n(key: I18nKey, lang?: string): string {
+	// langが指定されていない場合は、CookieまたはsiteConfigから取得
+	const currentLang = lang || (typeof document !== 'undefined' ? getLangFromCookie() : siteConfig.lang);
+	return getTranslation(currentLang)[key];
 }

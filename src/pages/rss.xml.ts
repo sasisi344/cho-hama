@@ -27,11 +27,13 @@ export async function GET(context: APIContext) {
 			const content =
 				typeof post.body === "string" ? post.body : String(post.body || "");
 			const cleanedContent = stripInvalidXmlChars(content);
+			const slug = post.data.slug || post.slug;
+			const category = post.data.category || '';
 			return {
 				title: post.data.title,
 				pubDate: post.data.published,
 				description: post.data.description || "",
-				link: url(`/posts/${post.slug}/`),
+				link: url(`/posts/${category ? `${category}/${slug}` : slug}/`),
 				content: sanitizeHtml(parser.render(cleanedContent), {
 					allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
 				}),

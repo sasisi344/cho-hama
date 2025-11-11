@@ -1,0 +1,145 @@
+---
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+
+const title = "プライバシーポリシー";
+const description = "プライバシーポリシー - 個人情報の取り扱いについて";
+---
+<MainGridLayout title={title} description={description}>
+    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-9 py-6 relative w-full">
+            <h1 class="text-3xl font-bold mb-6 text-black/90 dark:text-white/90">{title}</h1>
+            
+            <div class="markdown-content prose prose-lg max-w-none dark:prose-invert">
+                <p class="text-sm text-black/60 dark:text-white/60 mb-8">
+                    最終更新日: {new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </p>
+
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4 text-black/90 dark:text-white/90">1. 個人情報の収集について</h2>
+                    <p class="mb-4 text-black/75 dark:text-white/75">
+                        当サイトでは、サービス提供のため、以下の個人情報を収集する場合があります。
+                    </p>
+                    <ul class="list-disc pl-6 mb-4 space-y-2 text-black/75 dark:text-white/75">
+                        <li>お問い合わせフォームから送信された氏名、メールアドレス、その他の入力内容</li>
+                        <li>コメント投稿時に入力された氏名、メールアドレス、ウェブサイトURL</li>
+                        <li>アクセスログに記録されるIPアドレス、ブラウザ情報、アクセス日時</li>
+                    </ul>
+                </section>
+
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4 text-black/90 dark:text-white/90">2. 個人情報の利用目的</h2>
+                    <p class="mb-4 text-black/75 dark:text-white/75">
+                        当サイトで収集した個人情報は、以下の目的で利用します。
+                    </p>
+                    <ul class="list-disc pl-6 mb-4 space-y-2 text-black/75 dark:text-white/75">
+                        <li>お問い合わせへの回答および対応</li>
+                        <li>コメントへの返信</li>
+                        <li>サイトの運営、改善、サービス向上のための分析</li>
+                        <li>不正アクセスや不正利用の防止</li>
+                        <li>法令に基づく対応</li>
+                    </ul>
+                </section>
+
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4 text-black/90 dark:text-white/90">3. 個人情報の管理と保護</h2>
+                    <p class="mb-4 text-black/75 dark:text-white/75">
+                        当サイトは、個人情報の正確性を保ち、個人情報への不正アクセス・紛失・破壊・改ざん・漏洩などを防止するため、セキュリティシステムの維持・管理体制の整備・社員教育の徹底等の必要な措置を講じ、安全対策を実施し個人情報の厳重な管理を行います。
+                    </p>
+                </section>
+
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4 text-black/90 dark:text-white/90">4. 個人情報の第三者提供</h2>
+                    <p class="mb-4 text-black/75 dark:text-white/75">
+                        当サイトは、お客様からお預かりした個人情報を適切に管理し、次のいずれかに該当する場合を除き、個人情報を第三者に開示いたしません。
+                    </p>
+                    <ul class="list-disc pl-6 mb-4 space-y-2 text-black/75 dark:text-white/75">
+                        <li>お客様の同意がある場合</li>
+                        <li>法令に基づき開示することが必要である場合</li>
+                        <li>人の生命、身体または財産の保護のために必要がある場合</li>
+                        <li>公衆衛生の向上または児童の健全な育成の推進のために特に必要がある場合</li>
+                    </ul>
+                </section>
+
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4 text-black/90 dark:text-white/90">5. Cookie（クッキー）について</h2>
+                    <p class="mb-4 text-black/75 dark:text-white/75">
+                        当サイトでは、ユーザーエクスペリエンスの向上、サイトの分析、コンテンツの最適化を目的として、Cookie（クッキー）を使用しています。
+                    </p>
+                    <h3 class="text-xl font-semibold mb-3 text-black/85 dark:text-white/85">Cookieとは</h3>
+                    <p class="mb-4 text-black/75 dark:text-white/75">
+                        Cookieとは、ウェブサイトを訪問した際に、ブラウザを通じてユーザーのコンピュータに保存される小さなテキストファイルです。Cookieを使用することで、サイト運営者はユーザーの訪問履歴や設定情報を記録し、より快適な閲覧体験を提供できます。
+                    </p>
+                    <h3 class="text-xl font-semibold mb-3 text-black/85 dark:text-white/85">当サイトで使用するCookieの種類</h3>
+                    <ul class="list-disc pl-6 mb-4 space-y-2 text-black/75 dark:text-white/75">
+                        <li><strong>必須Cookie</strong>: サイトの基本的な機能を提供するために必要なCookieです。これらを無効にすると、サイトの一部機能が正常に動作しない可能性があります。</li>
+                        <li><strong>分析Cookie</strong>: サイトの訪問者数やページビュー、ユーザーの行動を分析するために使用されるCookieです。</li>
+                        <li><strong>機能Cookie</strong>: ユーザーの設定（言語設定、テーマ設定など）を記憶し、次回訪問時に同じ設定を適用するために使用されるCookieです。</li>
+                    </ul>
+                    <h3 class="text-xl font-semibold mb-3 text-black/85 dark:text-white/85">Cookieの管理</h3>
+                    <p class="mb-4 text-black/75 dark:text-white/75">
+                        ブラウザの設定により、Cookieの受け入れを拒否したり、Cookieが保存された際に通知を受け取ったりすることができます。ただし、Cookieを無効にした場合、サイトの一部機能が正常に動作しない可能性があります。
+                    </p>
+                </section>
+
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4 text-black/90 dark:text-white/90">6. アクセス解析ツールについて</h2>
+                    <p class="mb-4 text-black/75 dark:text-white/75">
+                        当サイトでは、Googleによるアクセス解析ツール「Googleアナリティクス」を使用しています。このGoogleアナリティクスはデータの収集のためにCookieを使用しています。このデータは匿名で収集されており、個人を特定するものではありません。
+                    </p>
+                    <p class="mb-4 text-black/75 dark:text-white/75">
+                        この機能はCookieを無効にすることで収集を拒否することができますので、お使いのブラウザの設定をご確認ください。この規約に関しての詳細は<a href="https://www.google.com/analytics/terms/jp.html" target="_blank" rel="noopener" class="text-[var(--primary)] hover:underline">Googleアナリティクス利用規約</a>のページや<a href="https://policies.google.com/privacy?hl=ja" target="_blank" rel="noopener" class="text-[var(--primary)] hover:underline">Googleポリシーと規約</a>ページをご覧ください。
+                    </p>
+                </section>
+
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4 text-black/90 dark:text-white/90">7. 広告配信について</h2>
+                    <p class="mb-4 text-black/75 dark:text-white/75">
+                        当サイトでは、第三者配信の広告サービス（例：Googleアドセンス、その他の広告ネットワーク）を利用しており、ユーザーに適切な広告を表示するためにCookieを使用しています。
+                    </p>
+                    <h3 class="text-xl font-semibold mb-3 text-black/85 dark:text-white/85">Googleアドセンスについて</h3>
+                    <p class="mb-4 text-black/75 dark:text-white/75">
+                        当サイトは、Googleアドセンスを利用しています。Googleアドセンスでは、ユーザーに適切な広告を表示するために、Cookieを使用してユーザーの興味や関心に基づいた広告を配信しています。
+                    </p>
+                    <p class="mb-4 text-black/75 dark:text-white/75">
+                        当サイトは、Googleアドセンスのポリシーに準拠して運営しています。Googleアドセンスのポリシーについては、<a href="https://policies.google.com/technologies/ads?hl=ja" target="_blank" rel="noopener" class="text-[var(--primary)] hover:underline">Googleのポリシーと規約</a>ページをご確認ください。
+                    </p>
+                    <p class="mb-4 text-black/75 dark:text-white/75">
+                        ユーザーは、<a href="https://www.google.com/settings/ads" target="_blank" rel="noopener" class="text-[var(--primary)] hover:underline">Google広告設定</a>から、パーソナライズ広告を無効にすることができます。また、<a href="http://www.aboutads.info/choices/" target="_blank" rel="noopener" class="text-[var(--primary)] hover:underline">www.aboutads.info</a>からも、第三者配信によるパーソナライズ広告を無効にすることができます。
+                    </p>
+                    <h3 class="text-xl font-semibold mb-3 text-black/85 dark:text-white/85">広告Cookieの無効化</h3>
+                    <p class="mb-4 text-black/75 dark:text-white/75">
+                        広告Cookieを無効にした場合でも、広告は表示されますが、ユーザーの興味や関心に基づいたパーソナライズ広告ではなく、一般的な広告が表示されます。
+                    </p>
+                </section>
+
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4 text-black/90 dark:text-white/90">8. 外部リンクについて</h2>
+                    <p class="mb-4 text-black/75 dark:text-white/75">
+                        当サイトからリンクしている外部サイトについては、当サイトの管理下にないため、リンク先サイトの個人情報の取り扱いについては、当サイトでは責任を負いかねます。リンク先サイトのプライバシーポリシーをご確認ください。
+                    </p>
+                </section>
+
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4 text-black/90 dark:text-white/90">9. 個人情報の開示・訂正・削除について</h2>
+                    <p class="mb-4 text-black/75 dark:text-white/75">
+                        ご本人から個人情報の開示・訂正・削除のご請求があった場合、ご本人であることを確認した上で、速やかに対応いたします。
+                    </p>
+                </section>
+
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4 text-black/90 dark:text-white/90">10. プライバシーポリシーの変更について</h2>
+                    <p class="mb-4 text-black/75 dark:text-white/75">
+                        当サイトは、法令の変更や事業内容の変更に伴い、本プライバシーポリシーを予告なく変更する場合があります。変更後のプライバシーポリシーは、本ページに掲載した時点で効力を生じるものとします。
+                    </p>
+                </section>
+
+                <section>
+                    <h2 class="text-2xl font-bold mb-4 text-black/90 dark:text-white/90">11. お問い合わせ</h2>
+                    <p class="text-black/75 dark:text-white/75">
+                        プライバシーポリシーに関するお問い合わせは、<a href="/about/" class="text-[var(--primary)] hover:underline">お問い合わせページ</a>よりご連絡ください。
+                    </p>
+                </section>
+            </div>
+        </div>
+    </div>
+</MainGridLayout>

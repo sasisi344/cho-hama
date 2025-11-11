@@ -3,10 +3,10 @@ import { Icon } from "astro-icon/components";
 ---
 
 <!-- There can't be a filter on parent element, or it will break `fixed` -->
-<div class="back-to-top-wrapper hidden lg:block">
+<div class="back-to-top-wrapper">
     <div id="back-to-top-btn" class="back-to-top-btn hide flex items-center rounded-2xl overflow-hidden transition" onclick="backToTop()">
-        <button aria-label="Back to Top" class="btn-card h-[3.75rem] w-[3.75rem]">
-            <Icon name="material-symbols:keyboard-arrow-up-rounded" class="mx-auto"></Icon>
+        <button aria-label="Back to Top" class="back-to-top-button h-14 w-14 lg:h-[3.75rem] lg:w-[3.75rem]">
+            <Icon name="material-symbols:keyboard-arrow-up-rounded" class="mx-auto text-2xl lg:text-[1.75rem] text-white"></Icon>
         </button>
     </div>
 </div>
@@ -19,6 +19,14 @@ import { Icon } from "astro-icon/components";
     right: 0
     top: 0
     pointer-events: none
+    @media (max-width: 1023px)
+        position: fixed
+        width: 3.5rem
+        height: 3.5rem
+        right: 1rem
+        bottom: 1rem
+        top: auto
+        z-index: 40
 
 .back-to-top-btn
     color: var(--primary)
@@ -31,14 +39,51 @@ import { Icon } from "astro-icon/components";
     cursor: pointer
     transform: translateX(5rem)
     pointer-events: auto
+    z-index: 40
+    transition: all 0.3s ease
+    @media (max-width: 1023px)
+        bottom: 1rem
+        right: 1rem
+        transform: translateX(0) translateY(0)
     i
         font-size: 1.75rem
     &.hide
         transform: translateX(5rem) scale(0.9)
         opacity: 0
         pointer-events: none
+        @media (max-width: 1023px)
+            transform: translateX(0) translateY(0) scale(0.9)
     &:active
       transform: translateX(5rem) scale(0.9)
+      @media (max-width: 1023px)
+          transform: translateX(0) translateY(0) scale(0.9)
+    &:hover:not(.hide)
+        transform: translateX(5rem) scale(1.05)
+        @media (max-width: 1023px)
+            transform: translateX(0) translateY(0) scale(1.05)
+
+.back-to-top-button
+    background: var(--back-to-top-bg)
+    color: var(--back-to-top-icon)
+    border: none
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15)
+    transition: all 0.3s ease
+    display: flex
+    align-items: center
+    justify-content: center
+    :global(.dark) &
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4)
+    &:hover
+        background: var(--primary)
+        transform: scale(1.05)
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2)
+        :global(.dark) &
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5)
+    &:active
+        transform: scale(0.95)
+    i, svg
+        color: var(--back-to-top-icon)
+        fill: var(--back-to-top-icon)
 
 </style>
 

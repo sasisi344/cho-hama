@@ -16,16 +16,59 @@ import { formatDateToYYYYMMDD } from "../../utils/date-utils";
 
 export async function getStaticPaths() {
 	const blogEntries = await getSortedPosts();
-	return blogEntries.map((entry) => ({
-		params: { slug: entry.slug },
-		props: { entry },
-	}));
+	const paths = [];
+	
+	// 各記事についてパスを生成
+	for (const entry of blogEntries) {
+		const slug = entry.data.slug || entry.slug;
+		const category = entry.data.category || '';
+		
+		// カテゴリーとslugを結合して文字列として返す
+		if (category) {
+			paths.push({
+				params: { slug: `${category}/${slug}` },
+				props: { entry },
+			});
+		} else {
+			paths.push({
+				params: { slug },
+				props: { entry },
+			});
+		}
+	}
+	
+	return paths;
 }
 
 const { entry } = Astro.props;
-const { Content, headings } = await entry.render();
+const params = Astro.params as { slug?: string | string[] } | undefined;
+const slug = entry.data.slug || entry.slug;
+const category = entry.data.category || '';
 
-const { remarkPluginFrontmatter } = await entry.render();
+// params.slugは配列として受け取られる（Astroの[...slug]ルートの仕様）
+// 例: ["naka-hamanako", "hamayuohashi"] または ["slug"]
+const slugArray = params?.slug 
+	? (Array.isArray(params.slug) ? params.slug : [params.slug])
+	: [];
+
+// getStaticPathsで生成されたパスは正しいはずなので、404チェックは緩和
+// 実際のURLパスとentryのslug/categoryが一致しない場合のみ404
+if (slugArray.length > 0) {
+	const expectedCategory = slugArray.length >= 2 ? slugArray[0] : '';
+	const expectedSlug = slugArray.length >= 2 ? slugArray[1] : slugArray[0];
+	
+	// カテゴリーが存在する場合、URLにも含まれている必要がある
+	if (category && expectedCategory) {
+		if (expectedCategory !== category || expectedSlug !== slug) {
+			return Astro.redirect("/404");
+		}
+	} else if (!category && expectedSlug && expectedSlug !== slug) {
+		// カテゴリーがない場合、slugのみをチェック
+		return Astro.redirect("/404");
+	}
+}
+
+const { Content, headings, remarkPluginFrontmatter } = await entry.render();
 
 const jsonLd = {
 	"@context": "https://schema.org",
@@ -39,13 +82,11 @@ const jsonLd = {
 		url: Astro.site,
 	},
 	datePublished: formatDateToYYYYMMDD(entry.data.published),
-	inLanguage: entry.data.lang
-		? entry.data.lang.replace("_", "-")
-		: siteConfig.lang.replace("_", "-"),
+	inLanguage: siteConfig.lang.replace("_", "-"),
 	// TODO include cover image here
 };
 ---
-<MainGridLayout banner={entry.data.image} title={entry.data.title} description={entry.data.description} lang={entry.data.lang} setOGTypeArticle={true} headings={headings}>
+<MainGridLayout banner={entry.data.image} title={entry.data.title} description={entry.data.description} setOGTypeArticle={true} headings={headings}>
     <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
     <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative mb-4">
         <div id="post-container" class:list={["card-base z-10 px-6 md:px-9 pt-6 pb-4 relative w-full ",
@@ -106,7 +147,7 @@ const jsonLd = {
                 <Content />
             </Markdown>
 
-            {licenseConfig.enable && <License title={entry.data.title} slug={entry.slug} pubDate={entry.data.published} class="mb-6 rounded-xl license-container onload-animation"></License>}
+            {licenseConfig.enable && <License title={entry.data.title} slug={entry.data.slug || entry.slug} pubDate={entry.data.published} class="mb-6 rounded-xl license-container onload-animation"></License>}
 
         </div>
     </div>

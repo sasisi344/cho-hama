@@ -41,6 +41,17 @@ const hasCover = image !== undefined && image !== null && image !== "";
 const coverWidth = "28%";
 
 const { remarkPluginFrontmatter } = await entry.render();
+
+// 要約文を200文字に制限
+const truncateDescription = (text: string | undefined, maxLength: number = 200): string => {
+    if (!text) return "";
+    const textStr = String(text);
+    if (textStr.length <= maxLength) return textStr;
+    return textStr.substring(0, maxLength).replace(/\s+\S*$/, "") + "...";
+};
+
+const excerptText = remarkPluginFrontmatter.excerpt ? String(remarkPluginFrontmatter.excerpt) : undefined;
+const displayDescription = truncateDescription(description || excerptText);
 ---
 <div class:list={["card-base flex flex-col-reverse md:flex-col w-full rounded-[var(--radius-large)] overflow-hidden relative", className]} style={style}>
     <div class:list={["pl-6 md:pl-9 pr-6 md:pr-2 pt-6 md:pt-7 pb-6 relative", {"w-full md:w-[calc(100%_-_52px_-_12px)]": !hasCover, "w-full md:w-[calc(100%_-_var(--coverWidth)_-_12px)]": hasCover}]}>
@@ -51,7 +62,7 @@ const { remarkPluginFrontmatter } = await entry.render();
         before:w-1 before:h-5 before:rounded-md before:bg-[var(--primary)]
         before:absolute before:top-[35px] before:left-[18px] before:hidden md:before:block
         ">
-            {title}
+            <span class="post-title">{title}</span>
             <Icon class="inline text-[2rem] text-[var(--primary)] md:hidden translate-y-0.5 absolute" name="material-symbols:chevron-right-rounded" ></Icon>
             <Icon class="text-[var(--primary)] text-[2rem] transition hidden md:inline absolute translate-y-0.5 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0" name="material-symbols:chevron-right-rounded"></Icon>
         </a>
@@ -60,8 +71,8 @@ const { remarkPluginFrontmatter } = await entry.render();
         <PostMetadata published={published} updated={updated} tags={tags} category={category} hideTagsForMobile={true} hideUpdateDate={true} class="mb-4"></PostMetadata>
 
         <!-- description -->
-        <div class:list={["transition text-75 mb-3.5 pr-4", {"line-clamp-2 md:line-clamp-1": !description}]}>
-            { description || remarkPluginFrontmatter.excerpt }
+        <div class:list={["transition text-75 mb-3.5 pr-4", {"line-clamp-2 md:line-clamp-1": !displayDescription}]}>
+            { displayDescription }
         </div>
 
         <!-- word count and read time  -->
@@ -77,7 +88,8 @@ const { remarkPluginFrontmatter } = await entry.render();
 
     </div>
 
-    {hasCover && <a href={url} aria-label={title}
+    {hasCover && <a href={url} 
+                    aria-label={title}
                     class:list={["group",
                         "max-h-[20vh] md:max-h-none mx-4 mt-4 -mb-2 md:mb-0 md:mx-0 md:mt-0",
                         "md:w-[var(--coverWidth)] relative md:absolute md:top-3 md:bottom-3 md:right-3 rounded-xl overflow-hidden active:scale-95"
@@ -94,7 +106,9 @@ const { remarkPluginFrontmatter } = await entry.render();
     </a>}
 
     {!hasCover &&
-        <a href={url} aria-label={title} class="!hidden md:!flex btn-regular w-[3.25rem]
+        <a href={url} 
+           aria-label={title}
+           class="!hidden md:!flex btn-regular w-[3.25rem]
          absolute right-3 top-3 bottom-3 rounded-xl bg-[var(--enter-btn-bg)]
          hover:bg-[var(--enter-btn-bg-hover)] active:bg-[var(--enter-btn-bg-active)] active:scale-95
         ">

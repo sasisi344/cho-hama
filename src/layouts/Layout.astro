@@ -57,9 +57,18 @@ if (title) {
 const favicons: Favicon[] =
 	siteConfig.favicon.length > 0 ? siteConfig.favicon : defaultFavicons;
 
+// Cookieから言語を取得（サーバーサイド）
+let currentLang = siteConfig.lang;
+if (Astro.cookies.has('lang')) {
+	const cookieLang = Astro.cookies.get('lang').value;
+	if (cookieLang && ['ja', 'en', 'pt'].includes(cookieLang)) {
+		currentLang = cookieLang;
+	}
+}
+
 // const siteLang = siteConfig.lang.replace('_', '-')
 if (!lang) {
-	lang = `${siteConfig.lang}`;
+	lang = `${currentLang}`;
 }
 const siteLang = lang.replace("_", "-");
 
@@ -459,9 +468,12 @@ let toc = document.getElementById('toc-wrapper');
 let navbar = document.getElementById('navbar-wrapper')
 function scrollFunction() {
 	let bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100)
+	// スマホの場合はより低い閾値（200px）で表示
+	const isMobile = window.innerWidth < 1024
+	const scrollThreshold = isMobile ? 200 : bannerHeight
 
 	if (backToTopBtn) {
-		if (document.body.scrollTop > bannerHeight || document.documentElement.scrollTop > bannerHeight) {
+		if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
 			backToTopBtn.classList.remove('hide')
 		} else {
 			backToTopBtn.classList.add('hide')

@@ -12,7 +12,19 @@ function joinUrl(...parts: string[]): string {
 	return joined.replace(/\/+/g, "/");
 }
 
-export function getPostUrlBySlug(slug: string): string {
+export function getPostUrlBySlug(slug: string, category?: string | null): string {
+	// slugが既にcategory/slug形式の場合
+	if (slug.includes('/')) {
+		const parts = slug.split('/');
+		if (parts.length === 2) {
+			return url(`/posts/${parts[0]}/${parts[1]}/`);
+		}
+		return url(`/posts/${slug}/`);
+	}
+	// categoryが指定されている場合
+	if (category) {
+		return url(`/posts/${category}/${slug}/`);
+	}
 	return url(`/posts/${slug}/`);
 }
 
