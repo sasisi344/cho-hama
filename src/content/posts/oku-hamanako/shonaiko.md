@@ -8,7 +8,7 @@ category: "oku-hamanako"
 draft: false
 lang: "ja"
 date: "2024-08-26"
-slug: "shonaiko"
+slug: "syonaiko-okuhamanako-point"
 ---
 
 
